@@ -74,14 +74,14 @@ Vas a ver el carrito con tres productos y su total.
 
 **P1** — Calculá a mano el total esperado: Leche ($350 x2) + Pan ($200 x3) + Queso ($1500 x1).
 
-> R: (escribí el total esperado)
+> R: $2800 ($350 × 2 + $200 × 3 + $1500 × 1).
 
 **P2** — ¿El total que imprime el programa coincide con lo que calculaste? Si no coincide, ¿cuánto muestra?
 
-> R:
+> R: No. Antes de corregir el bug, el programa muestra $2050 porque suma los precios unitarios sin multiplicarlos por la cantidad.
 
 ```
-TOTAL_PROGRAMA=
+TOTAL_PROGRAMA=2050
 ```
 _(escribí el número que imprimió el programa)_
 
@@ -131,7 +131,7 @@ Mirá el código en `tests/test_unitarios.c` para entender la estructura de un t
 
 **P3** — ¿Qué hace `carrito_init` y por qué es importante llamarla antes de usar el carrito?
 
-> R:
+> R: `carrito_init` inicializa el carrito poniendo su cantidad en cero. Debe llamarse antes de usarlo para empezar vacío y evitar leer un valor indeterminado.
 
 ---
 
@@ -166,10 +166,10 @@ make test_unitarios
 
 **P4** — ¿El nuevo test pasa o falla?
 
-> R:
+> R: Pasa.
 
 ```
-TEST_PRECIO_UNITARIO_PASA=
+TEST_PRECIO_UNITARIO_PASA=SI
 ```
 _(SI o NO)_
 
@@ -195,10 +195,10 @@ Descomentá `/* test_total_con_cantidad(); */` en el `main()`, compilá y corré
 
 **P5** — ¿Este test pasa o falla? ¿Qué valor esperaba y qué obtuvo?
 
-> R:
+> R: Falla: esperaba 700 y obtuvo 350, porque `carrito_total` no tenía en cuenta la cantidad.
 
 ```
-TEST_TOTAL_CANTIDAD_PASA=
+TEST_TOTAL_CANTIDAD_PASA=NO
 ```
 _(SI o NO)_
 
@@ -210,11 +210,11 @@ El test anterior encontró un bug en `carrito_total`. Abrí `src/carrito.c` y bu
 
 **P6** — ¿En qué línea está el bug y qué dice ese código?
 
-> R:
+> R: En la línea 24: `total += c->items[i].precio;`, que suma el precio unitario y omite la cantidad.
 
 **P7** — ¿Qué debería hacer esa línea para calcular el total correctamente?
 
-> R:
+> R: Debe acumular `c->items[i].precio * c->items[i].cantidad` para cada producto.
 
 Corregí el bug. Luego volvé a compilar y correr:
 
@@ -232,7 +232,7 @@ cat salidas/test_unitarios.txt
 ```
 
 ```
-TESTS_UNITARIOS_PASAN=
+TESTS_UNITARIOS_PASAN=SI
 ```
 _(escribí SI si todos los tests pasan ahora)_
 
@@ -254,18 +254,18 @@ Descomentá `/* test_carrito_lleno(); */` en el `main()`, compilá y corré.
 
 **P8** — ¿El test pasa o falla? Si falla, ¿qué devuelve ese 5to `carrito_agregar`?
 
-> R:
+> R: Falla: el intento de agregar el quinto producto devuelve 1, aunque el carrito ya está lleno.
 
 Si el test falló, encontraste el segundo bug. Buscá en `src/carrito.c` la condición del `if` dentro de `carrito_agregar`.
 
 **P9** — ¿Cuál es el operador incorrecto y cuál debería ser?
 
-> R:
+> R: El operador incorrecto es `<=`; debe ser `<` para no escribir fuera del array cuando la cantidad ya es `MAX_ITEMS`.
 
 Corregí el bug, volvé a compilar y verificá que todos los tests pasan.
 
 ```
-BUG_2_CORREGIDO=
+BUG_2_CORREGIDO=SI
 ```
 _(SI o NO)_
 
@@ -301,7 +301,7 @@ cat salidas/test_integracion.txt
 ```
 
 ```
-TEST_INTEGRACION_PASA=
+TEST_INTEGRACION_PASA=SI
 ```
 _(SI o NO)_
 
@@ -319,7 +319,7 @@ Escribí `test_agregar_hasta_llenar()` en el lugar `/* PARTE E */`. Este test de
 Descomentá `/* test_agregar_hasta_llenar(); */` en el `main()`, compilá y corré.
 
 ```
-TEST_LLENAR_PASA=
+TEST_LLENAR_PASA=SI
 ```
 _(SI o NO)_
 
@@ -338,10 +338,10 @@ Las líneas con `#####` nunca se ejecutaron — no están cubiertas por los test
 
 **P10** — ¿Hay alguna línea de `carrito.c` con `#####`? ¿Cuál y por qué no se ejecutó?
 
-> R:
+> R: Sí. Las líneas de `carrito_descuento` aparecen como `#####` porque `make cobertura` ejecuta los tests unitarios, y el descuento se verifica en el test de integración.
 
 ```
-COBERTURA_COMPLETA=
+COBERTURA_COMPLETA=NO
 ```
 _(SI si todas las líneas están cubiertas, NO si hay alguna con #####)_
 
@@ -351,27 +351,27 @@ _(SI si todas las líneas están cubiertas, NO si hay alguna con #####)_
 
 **P11** — ¿Qué diferencia hay entre un test unitario y uno de integración? ¿Cuál de los dos detectó primero el bug de `carrito_total`?
 
-> R:
+> R: Un test unitario verifica una función o comportamiento aislado; uno de integración comprueba varias funciones trabajando juntas. El test unitario `test_total_con_cantidad` detectó primero el bug de `carrito_total`.
 
 **P12** — El bug de capacidad en `carrito_agregar` causa un **buffer overflow**: se escribe más allá del array. ¿Por qué esto es peligroso en C pero no ocurriría en un lenguaje como Python o Java?
 
-> R:
+> R: C no comprueba automáticamente los límites de los arrays: escribir fuera del array causa comportamiento indefinido y puede corromper memoria. Python y Java comprueban los índices y lanzan un error.
 
 **P13** — En este laboratorio encontraste los bugs escribiendo tests. ¿Qué tiene de mejor este enfoque frente a mirar el código directamente?
 
-> R:
+> R: Los tests expresan el comportamiento esperado y permiten reproducir el fallo y comprobar la corrección; también detectan casos límite y regresiones que pueden pasar inadvertidos al leer el código.
 
 **P14** — El test `test_total_precio_unitario` (cantidad = 1) **pasó** a pesar del bug, mientras que `test_total_con_cantidad` (cantidad = 2) **falló**. ¿Por qué el primer test no detectó el bug?
 
-> R:
+> R: Con cantidad 1, el precio unitario multiplicado por 1 es el mismo precio. Por eso el test no expone que faltaba multiplicar por la cantidad.
 
 ```
-BUG_EN_FUNCION_1=
+BUG_EN_FUNCION_1=carrito_total
 ```
 _(nombre de la función con el primer bug)_
 
 ```
-BUG_EN_FUNCION_2=
+BUG_EN_FUNCION_2=carrito_agregar
 ```
 _(nombre de la función con el segundo bug)_
 
@@ -381,12 +381,12 @@ _(nombre de la función con el segundo bug)_
 
 ### Checklist
 
-- [ ] Ambos bugs corregidos en `src/carrito.c`
-- [ ] Tests en `tests/test_unitarios.c` y `tests/test_integracion.c` completos y pasando
-- [ ] Salidas guardadas en `salidas/`
-- [ ] Respuestas y claves completadas en este archivo
-- [ ] `make test` pasa localmente
-- [ ] Todo pusheado a `main`
+- [x] Ambos bugs corregidos en `src/carrito.c`
+- [x] Tests en `tests/test_unitarios.c` y `tests/test_integracion.c` completos y pasando
+- [x] Salidas guardadas en `salidas/`
+- [x] Respuestas y claves completadas en este archivo
+- [x] `make test` pasa localmente
+- [x] Todo pusheado a `main`
 
 ### Verificación local
 
