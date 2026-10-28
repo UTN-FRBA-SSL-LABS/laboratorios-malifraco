@@ -10,14 +10,20 @@
 
 int main(void) {
 
-    /* ── ToInteger — tiene un bug, estos tests ya estan activos ─────────── */
+    /* ── ToInteger ──────────────────────────────────────────────────────── */
     assert(ToInteger("0") == 0);
     assert(ToInteger("1") == 1);
     assert(ToInteger("42") == 42);
     assert(ToInteger("-7") == -7);
     assert(ToInteger("100") == 100);
 
-    /* ── Operacion libre — agregar tests aca ────────────────────────────── */
+    /* ── IsValidInteger ─────────────────────────────────────────────────── */
+    assert(IsValidInteger("0") == 1);
+    assert(IsValidInteger("-42") == 1);
+    assert(IsValidInteger("") == 0);
+    assert(IsValidInteger("-") == 0);
+    assert(IsValidInteger("12a") == 0);
+    assert(IsValidInteger("+5") == 0);
 
     return 0;
 }

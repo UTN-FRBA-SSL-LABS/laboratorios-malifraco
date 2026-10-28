@@ -6,7 +6,7 @@
  * REGLA: no usar atoi, strtol ni ninguna funcion estandar de conversion
  */
 
-/* ── ToInteger — completar siguiendo el README.md ───────────────────────── */
+/* ── ToInteger ──────────────────────────────────────────────────────────── */
 
 int ToInteger(const char *s) {
     int signo     = 1;
@@ -14,9 +14,16 @@ int ToInteger(const char *s) {
     if (*s == '-') { signo = -1; s++; }
     for (; *s != '\0'; s++)
         resultado = resultado * 10 + (*s - '0');
-    return signo; /* bug: falta multiplicar signo por resultado */
+    return signo * resultado;
 }
 
 /* ── Operacion libre ─────────────────────────────────────────────────────── */
 
-/* TODO */
+int IsValidInteger(const char *s) {
+    if (*s == '-') s++;
+    if (*s == '\0') return 0;
+    for (; *s != '\0'; s++)
+        if (*s < '0' || *s > '9')
+            return 0;
+    return 1;
+}
